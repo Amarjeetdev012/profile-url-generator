@@ -8,9 +8,8 @@ router.get('/users/:id', (req, res, next) => {
     const userName = req.params.id;
     User.findOne({ userName: userName })
       .then((doc) => {
-        res
-          .status(200)
-          .send({ status: true, message: 'user info', data: doc });
+        doc.link = undefined;
+        res.status(200).send({ status: true, message: 'user info', data: doc });
       })
       .catch((err) => {
         console.log(err);
@@ -28,9 +27,11 @@ router.post('/generateLink', async (req, res) => {
 
   const user = await User.findOne({ userName: userName });
   if (user) {
-    return res
-      .status(200)
-      .send({ status: true, message: 'user link already created', data: user });
+    return res.status(200).send({
+      status: true,
+      message: 'user link already created',
+      link: user.link,
+    });
   }
   const userData = {
     name: name,
@@ -41,7 +42,7 @@ router.post('/generateLink', async (req, res) => {
   const userObj = await User.create(userData);
   res
     .status(201)
-    .send({ status: true, message: 'user link created', data: userObj });
+    .send({ status: true, message: 'user link created', link: userObj.link });
 });
 
 export default router;
