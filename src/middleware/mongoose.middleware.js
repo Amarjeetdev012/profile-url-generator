@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const MONGO_URL = process.env.MONGO_URL;
 
 export const connectDatabase = () => {
   console.log('mongodb is connecting ....');
   mongoose
-    .connect(
-      'mongodb+srv://amarjeet:8ckRS2Equ0wiGgKx@cluster0.9lvsazp.mongodb.net/link'
-    )
+    .connect(MONGO_URL)
     .then(() => {
       console.log('mongodb is connected');
     })
