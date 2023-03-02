@@ -1,5 +1,6 @@
 import express from 'express';
 import { User } from '../model/user.model.js';
+import bcrypt from 'bcryptjs';
 
 const router = express.Router();
 
@@ -33,12 +34,16 @@ router.post('/generateLink', async (req, res) => {
       link: user.link,
     });
   }
+  const salt = bcrypt.genSaltSync(10);
+  console.log('salt', salt);
+  const hash = bcrypt.hashSync(password, salt);
+  console.log('hash', hash);
   const userData = {
     name: name,
     userName: userName,
     email: email,
     link: userLink,
-    password: password,
+    password: hash,
   };
   const userObj = await User.create(userData);
   res
