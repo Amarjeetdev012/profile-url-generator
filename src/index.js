@@ -8,9 +8,16 @@ app.use('/', router);
 const PORT = 3000;
 connectDatabase();
 
-app.get('*', function (req, res) {
-  res.status(404).send('page not found');
-});
+// app.all('*', function (req, res) {
+//   res.status(404).send('page not found');
+// });
+
+app.use((req, res) => {
+  res.status(404).json({
+      success: false,
+      msg: "Page not founded"
+  })
+})
 
 app.listen(PORT, () => {
   console.log(`app is running in PORT ${PORT}`);

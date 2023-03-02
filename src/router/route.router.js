@@ -9,9 +9,17 @@ router.get('/users/:id', (req, res) => {
     const userName = req.params.id;
     User.findOne({ userName: userName })
       .then((doc) => {
-        doc.link = undefined;
-        doc.password = undefined;
-        res.status(200).send({ status: true, message: 'user info', data: doc });
+        if (doc) {
+          doc.link = undefined;
+          doc.password = undefined;
+          res
+            .status(200)
+            .send({ status: true, message: 'user info', data: doc });
+        } else {
+          return res
+            .status(404)
+            .send({ status: false, message: 'no user found' });
+        }
       })
       .catch((err) => {
         console.log('Error', err);
@@ -35,9 +43,7 @@ router.post('/generateLink', async (req, res) => {
     });
   }
   const salt = bcrypt.genSaltSync(10);
-  console.log('salt', salt);
   const hash = bcrypt.hashSync(password, salt);
-  console.log('hash', hash);
   const userData = {
     name: name,
     userName: userName,
