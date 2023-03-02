@@ -9,6 +9,7 @@ router.get('/users/:id', (req, res) => {
     User.findOne({ userName: userName })
       .then((doc) => {
         doc.link = undefined;
+        doc.password = undefined;
         res.status(200).send({ status: true, message: 'user info', data: doc });
       })
       .catch((err) => {
@@ -21,7 +22,7 @@ router.get('/users/:id', (req, res) => {
 
 router.post('/generateLink', async (req, res) => {
   const data = req.body;
-  const { name, userName, email } = data;
+  const { name, userName, email, password } = data;
   const baseUrl = 'http://localhost:3000';
   const userLink = `${baseUrl}/users/${userName}`;
   const user = await User.findOne({ userName: userName });
@@ -37,6 +38,7 @@ router.post('/generateLink', async (req, res) => {
     userName: userName,
     email: email,
     link: userLink,
+    password: password,
   };
   const userObj = await User.create(userData);
   res
